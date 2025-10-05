@@ -1,0 +1,195 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import Lightbox from './Lightbox';
+import VideoCard from './VideoCard';
+
+const Gallery = ({ folderName, title }) => {
+  const [images, setImages] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    loadMedia();
+  }, [folderName]);
+
+  const loadMedia = () => {
+    try {
+      // Load images
+      const imageContext = require.context('../../public', true, /\.(png|jpe?g|svg|gif)$/);
+      const folderImages = imageContext.keys()
+        .filter(key => key.includes(`/${folderName}/`))
+        .map((key, index) => ({
+          id: index,
+          src: imageContext(key),
+          name: key.split('/').pop(),
+          path: key
+        }));
+
+      // Load videos
+      const videoContext = require.context('../../public', true, /\.(mp4|webm|mov|avi)$/);
+      const folderVideos = videoContext.keys()
+        .filter(key => key.includes(`/${folderName}/`))
+        .map((key, index) => ({
+          id: index,
+          src: videoContext(key),
+          name: key.split('/').pop(),
+          path: key
+        }));
+
+      setImages(folderImages);
+      setVideos(folderVideos);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error loading media:', error);
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="py-20 text-center">
+        <div className="loading-spinner mx-auto"></div>
+        <p className="mt-4 text-gray-300">Loading memories...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="py-12 md:py-16">
+      <div className="container mx-auto px-4 md:px-6">
+        {title && (
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12 gradient-text">
+            {title}
+          </h2>
+        )}
+
+        {images.length === 0 && videos.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-400 text-lg">
+              No memories found in this gallery yet.
+            </p>
+            <p className="text-gray-500 text-sm mt-2">
+              Add images or videos to /public/{folderName}/ folder
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Images Section */}
+            {images.length > 0 && (
+              <div className="mb-16">
+                <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-pink-300">
+                  Photo Memories 📸
+                </h3>
+                <div className="gallery-grid">
+                  {images.map((image, index) => (
+                    <motion.div
+                      key={`image-${image.id}`}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="gallery-item aspect-square bg-white/5 rounded-lg overflow-hidden cursor-pointer group relative"
+                      onClick={() => setSelectedImage(index)}
+                    >
+                      <img
+                        src={image.src}
+                        alt={image.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <p className="text-white text-sm font-medium truncate">
+                          {image.name}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Videos Section */}
+            {videos.length > 0 && (
+              <div>
+                <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-purple-300">
+                  Video Memories 🎥
+                </h3>
+                <div className="gallery-grid">
+                  {videos.map((video, index) => (
+                    <motion.div
+                      key={`video-${video.id}`}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: (images.length + index) * 0.05 }}
+                      className="gallery-item aspect-square bg-white/5 rounded-lg overflow-hidden cursor-pointer group relative"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedVideo(video.src);
+                      }}
+                    >
+                      {/* Video Thumbnail */}
+                      <video
+                        src={video.src}
+                        className="w-full h-full object-cover"
+                        preload="metadata"
+                      />
+
+                      {/* Play Icon Overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/60 transition-all">
+                        <motion.div
+                          whileHover={{ scale: 1.2 }}
+                          className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border-4 border-white/50"
+                        >
+                          <svg
+                            className="w-8 h-8 text-white ml-1"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </motion.div>
+                      </div>
+
+                      {/* Video Name */}
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                        <p className="text-white text-sm font-medium truncate">
+                          🎬 {video.name}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="text-center mt-8 text-gray-400">
+              {images.length} {images.length === 1 ? 'photo' : 'photos'}
+              {videos.length > 0 && ` • ${videos.length} ${videos.length === 1 ? 'video' : 'videos'}`}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Image Lightbox */}
+      {selectedImage !== null && (
+        <Lightbox
+          images={images}
+          currentIndex={selectedImage}
+          onClose={() => setSelectedImage(null)}
+          onNavigate={setSelectedImage}
+        />
+      )}
+
+      {/* Video Player */}
+      {selectedVideo && (
+        <VideoCard
+          src={selectedVideo}
+          onClose={() => setSelectedVideo(null)}
+        />
+      )}
+    </div>
+  );
+};
+
+export default Gallery;
