@@ -388,6 +388,7 @@ I miss you both too much.`}
         <Gallery
           folderName="tharu_memory1"
           title="Our Beautiful Memories 📸"
+          scrollingMode={true}
         />
 
         {/* Password-Protected Gallery: Tharu Personal Pictures */}
@@ -396,12 +397,14 @@ I miss you both too much.`}
           title="Special Protected Memories 🔒👑"
           password="tharusecret123"
           isPrincess={true}
+          scrollingMode={true}
         />
 
         {/* Gallery Section: Tharu Memory 3 */}
         <Gallery
           folderName="tharu_memory3"
           title="More Precious Moments 💝"
+          scrollingMode={true}
         />
 
         {/* Final Memory Section */}

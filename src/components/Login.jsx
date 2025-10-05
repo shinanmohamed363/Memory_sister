@@ -126,9 +126,19 @@ const Login = ({ onLogin }) => {
             <h1 className="text-3xl font-bold text-white mb-2">
               Memory Gallery
             </h1>
-            <p className="text-lg text-white/90 font-display mb-4">
+            <p className="text-lg text-white/90 font-display mb-2">
               A Story of Two Sisters 💕
             </p>
+            <div className="px-6 mb-4">
+              <p className="text-base text-white/95 font-medium mb-3 italic">
+                "This is my mini world where I keep you. My sisters' story."
+              </p>
+              <p className="text-sm text-white/85 leading-relaxed">
+                Not just memories - but pieces of my heart, wrapped in pixels and love.
+                Every photo whispers a thousand words I couldn't say, every moment captured is proof that angels exist... and I'm blessed to call them my sisters.
+                Through laughter and tears, fights and hugs - this is our forever story. 💖
+              </p>
+            </div>
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
@@ -281,9 +291,19 @@ const Login = ({ onLogin }) => {
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
                 Memory Gallery
               </h1>
-              <p className="text-xl text-white/90 font-display">
+              <p className="text-xl text-white/90 font-display mb-3">
                 A Story of Two Sisters 💕
               </p>
+              <div className="mt-4">
+                <p className="text-lg text-white/95 font-medium mb-3 italic">
+                  "This is my mini world where I keep you. My sisters' story."
+                </p>
+                <p className="text-sm text-white/85 leading-relaxed max-w-lg mx-auto">
+                  Not just memories - but pieces of my heart, wrapped in pixels and love.
+                  Every photo whispers a thousand words I couldn't say, every moment captured is proof that angels exist... and I'm blessed to call them my sisters.
+                  Through laughter and tears, fights and hugs - this is our forever story. 💖
+                </p>
+              </div>
             </motion.div>
 
           {/* Login Card */}

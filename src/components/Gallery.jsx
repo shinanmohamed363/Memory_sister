@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Lightbox from './Lightbox';
 import VideoCard from './VideoCard';
 
-const Gallery = ({ folderName, title }) => {
+const Gallery = ({ folderName, title, scrollingMode = false }) => {
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -82,30 +82,93 @@ const Gallery = ({ folderName, title }) => {
                 <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-pink-300">
                   Photo Memories 📸
                 </h3>
-                <div className="gallery-grid">
-                  {images.map((image, index) => (
-                    <motion.div
-                      key={`image-${image.id}`}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="gallery-item aspect-square bg-white/5 rounded-lg overflow-hidden cursor-pointer group relative"
-                      onClick={() => setSelectedImage(index)}
-                    >
-                      <img
-                        src={image.src}
-                        alt={image.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                        <p className="text-white text-sm font-medium truncate">
-                          {image.name}
-                        </p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+
+                {scrollingMode ? (
+                  /* Scrolling Animation Mode */
+                  <div className="relative h-[600px] overflow-hidden">
+                    <div className="flex gap-4 h-full">
+                      {/* Left Column - Scrolling Up */}
+                      <motion.div
+                        className="flex flex-col gap-4 flex-1"
+                        animate={{ y: [0, -2000] }}
+                        transition={{ y: { duration: 40, repeat: Infinity, ease: "linear" }}}
+                      >
+                        {[...images, ...images, ...images].map((image, index) => (
+                          <div
+                            key={`scroll-left-${index}`}
+                            className="gallery-item aspect-square bg-white/5 rounded-lg overflow-hidden cursor-pointer group relative flex-shrink-0"
+                            onClick={() => setSelectedImage(index % images.length)}
+                          >
+                            <img
+                              src={image.src}
+                              alt={image.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                              <p className="text-white text-sm font-medium truncate">
+                                {image.name}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </motion.div>
+
+                      {/* Right Column - Scrolling Down */}
+                      <motion.div
+                        className="flex flex-col gap-4 flex-1"
+                        animate={{ y: [-2000, 0] }}
+                        transition={{ y: { duration: 40, repeat: Infinity, ease: "linear" }}}
+                      >
+                        {[...images, ...images, ...images].map((image, index) => (
+                          <div
+                            key={`scroll-right-${index}`}
+                            className="gallery-item aspect-square bg-white/5 rounded-lg overflow-hidden cursor-pointer group relative flex-shrink-0"
+                            onClick={() => setSelectedImage(index % images.length)}
+                          >
+                            <img
+                              src={image.src}
+                              alt={image.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                              <p className="text-white text-sm font-medium truncate">
+                                {image.name}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </motion.div>
+                    </div>
+                  </div>
+                ) : (
+                  /* Regular Grid Mode */
+                  <div className="gallery-grid">
+                    {images.map((image, index) => (
+                      <motion.div
+                        key={`image-${image.id}`}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="gallery-item aspect-square bg-white/5 rounded-lg overflow-hidden cursor-pointer group relative"
+                        onClick={() => setSelectedImage(index)}
+                      >
+                        <img
+                          src={image.src}
+                          alt={image.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                          <p className="text-white text-sm font-medium truncate">
+                            {image.name}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

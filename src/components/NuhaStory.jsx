@@ -535,6 +535,7 @@ Forever. 💖`}
         <Gallery
           folderName="memory1"
           title="Our Beautiful Memories 📸"
+          scrollingMode={true}
         />
 
         {/* Password-Protected Gallery: Memory 2 */}
@@ -542,12 +543,14 @@ Forever. 💖`}
           folderName="memory2-lock"
           title="Special Protected Memories 🔒"
           password="nuhasecret123"
+          scrollingMode={true}
         />
 
         {/* Gallery Section: Memory 3 */}
         <Gallery
           folderName="memory3"
           title="More Precious Moments 💝"
+          scrollingMode={true}
         />
 
         {/* Final Memory Section */}
